@@ -24,9 +24,9 @@ python -m venv .venv
 
 Install the required dependencies in the virtual environment :
 ```bash
-pip install pipx
-pipx install langflow --fetch-missing-python
+pip install langflow --use-deprecated=legacy-resolver
 ```
 
 # Reference
+https://github.com/langflow-ai/langflow/issues/4913 
 https://github.com/langflow-ai/langflow/issues/2473?utm_source=perplexity
