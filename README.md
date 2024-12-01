@@ -27,6 +27,12 @@ Install the required dependencies in the virtual environment :
 pip install langflow --use-deprecated=legacy-resolver
 ```
 
+Run the app :
+```bash
+python -m langflow run
+```
+
 # Reference
+https://docs.langflow.org/get-started-quickstart
 https://github.com/langflow-ai/langflow/issues/4913 
 https://github.com/langflow-ai/langflow/issues/2473?utm_source=perplexity
