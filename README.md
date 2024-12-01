@@ -24,7 +24,8 @@ python -m venv .venv
 
 Install the required dependencies in the virtual environment :
 ```bash
-pipx install langflow --python python3.10 --fetch-missing-python
+pip install pipx
+pipx install langflow --fetch-missing-python
 ```
 
 # Reference
