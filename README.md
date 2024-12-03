@@ -39,8 +39,8 @@ Official documentation - https://docs.langflow.org/get-started-quickstart
 
 Official repository - https://github.com/langflow-ai/langflow 
 
-Demo - https://www.youtube.com/watch?v=xD43xUC_LWI&t=172s
-[![Watch the video](https://img.youtube.com/vi/xD43xUC_LWI&t/0.jpg)](https://www.youtube.com/watch?v=xD43xUC_LWI&t)
+<!-- Demo - https://www.youtube.com/watch?v=xD43xUC_LWI&t=172s -->
+[![Watch the short Demo](https://img.youtube.com/vi/xD43xUC_LWI/maxresdefault.jpg)](https://www.youtube.com/watch?v=xD43xUC_LWI)
 
 https://github.com/langflow-ai/LangflowComponent
 
