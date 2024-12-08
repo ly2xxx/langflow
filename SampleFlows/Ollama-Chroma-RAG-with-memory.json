@@ -168,7 +168,7 @@
                 "trace_as_input": true,
                 "trace_as_metadata": true,
                 "type": "str",
-                "value": "Write a short blog post about this article in less than 100 words"
+                "value": "Write an email to promote this blog post to technical audience"
               },
               "sender": {
                 "advanced": true,
@@ -1283,34 +1283,6 @@
         "positionAbsolute": {
           "x": 824.1003268813427,
           "y": 698.6951695764802
-        },
-        "selected": false,
-        "type": "noteNode",
-        "width": 324
-      },
-      {
-        "data": {
-          "id": "note-ZslAe",
-          "node": {
-            "description": "### 💡 Add your OpenAI API key here 👇",
-            "display_name": "",
-            "documentation": "",
-            "template": {
-              "backgroundColor": "transparent"
-            }
-          },
-          "type": "note"
-        },
-        "dragging": false,
-        "height": 324,
-        "id": "note-ZslAe",
-        "position": {
-          "x": 2350.297636215281,
-          "y": 525.0687902842766
-        },
-        "positionAbsolute": {
-          "x": 2350.297636215281,
-          "y": 525.0687902842766
         },
         "selected": false,
         "type": "noteNode",
@@ -2529,7 +2501,7 @@
             "frozen": false,
             "icon": "message-square-more",
             "legacy": false,
-            "lf_version": "1.0.19.post2",
+            "lf_version": "1.1.1",
             "metadata": {},
             "output_types": [],
             "outputs": [
@@ -2727,7 +2699,7 @@
           },
           "type": "Memory"
         },
-        "selected": true,
+        "selected": false,
         "width": 320,
         "height": 263,
         "positionAbsolute": {
@@ -2771,7 +2743,7 @@
             "is_input": null,
             "is_output": null,
             "legacy": false,
-            "lf_version": "1.0.19.post2",
+            "lf_version": "1.1.1",
             "metadata": {},
             "name": "",
             "output_types": [],
@@ -2862,6 +2834,32 @@
           "y": 1142.3242312028476
         },
         "dragging": false
+      },
+      {
+        "id": "note-TCJGy",
+        "type": "noteNode",
+        "position": {
+          "x": 1887.339575218771,
+          "y": 1558.8992034606708
+        },
+        "data": {
+          "id": "note-TCJGy",
+          "node": {
+            "description": "# Memory Chatbot\n\nA flexible chatbot implementation featuring advanced conversation memory capabilities. This serves as a foundational tool for building chat experiences with persistent context.\n\n## Core Components\n\n1. **Chat Input**\n   - Accepts user messages\n   - Configures conversation storage\n   - Tracks session identity\n\n2. **Chat Memory**\n   - Stores and retrieves up to 100 previous messages\n   - Maintains conversation context\n   - Tracks separate chat sessions\n   - Preserves sender information and message order\n\n3. **Prompt**\n   - Creates dynamic prompt templates\n   - Integrates memory into conversation flow\n\n4. **OpenAI**\n   - Processes user input with context\n   - Accesses conversation history\n   - Includes options for model configuration and API key setup\n\n5. **Chat Output**\n   - Displays formatted responses\n   - Maintains conversation flow\n   - Syncs with memory storage\n\n## Memory Features\n\n- Stores message history\n- Plans conversation trajectory\n- Differentiates between chat sessions\n- Preserves sender and message metadata\n\n## Quick Start\n\n1. **Initialize** with a clear session ID\n2. **Enter** message in Chat Input\n3. **AI Processes** with context from memory\n4. **Response** appears in Chat Output\n5. Context remains available for follow-ups\n\nThis robust system demonstrates thorough memory integration with minimal complexity. 🧠💬\n",
+            "display_name": "",
+            "documentation": "",
+            "template": {}
+          },
+          "type": "note"
+        },
+        "selected": true,
+        "width": 325,
+        "height": 325,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 1887.339575218771,
+          "y": 1558.8992034606708
+        }
       }
     ],
     "edges": [
@@ -3134,7 +3132,9 @@
             ]
           }
         },
-        "id": "reactflow__edge-Memory-jOrxs{œdataTypeœ:œMemoryœ,œidœ:œMemory-jOrxsœ,œnameœ:œmessages_textœ,œoutput_typesœ:[œMessageœ]}-Prompt-WcjtA{œfieldNameœ:œmemoryœ,œidœ:œPrompt-WcjtAœ,œinputTypesœ:[œMessageœ,œTextœ],œtypeœ:œstrœ}"
+        "id": "reactflow__edge-Memory-jOrxs{œdataTypeœ:œMemoryœ,œidœ:œMemory-jOrxsœ,œnameœ:œmessages_textœ,œoutput_typesœ:[œMessageœ]}-Prompt-WcjtA{œfieldNameœ:œmemoryœ,œidœ:œPrompt-WcjtAœ,œinputTypesœ:[œMessageœ,œTextœ],œtypeœ:œstrœ}",
+        "animated": false,
+        "className": ""
       },
       {
         "source": "Prompt-WcjtA",
@@ -3159,12 +3159,14 @@
             ]
           }
         },
-        "id": "reactflow__edge-Prompt-WcjtA{œdataTypeœ:œPromptœ,œidœ:œPrompt-WcjtAœ,œnameœ:œpromptœ,œoutput_typesœ:[œMessageœ]}-OllamaModel-jXcwD{œfieldNameœ:œsystem_messageœ,œidœ:œOllamaModel-jXcwDœ,œinputTypesœ:[œMessageœ],œtypeœ:œstrœ}"
+        "id": "reactflow__edge-Prompt-WcjtA{œdataTypeœ:œPromptœ,œidœ:œPrompt-WcjtAœ,œnameœ:œpromptœ,œoutput_typesœ:[œMessageœ]}-OllamaModel-jXcwD{œfieldNameœ:œsystem_messageœ,œidœ:œOllamaModel-jXcwDœ,œinputTypesœ:[œMessageœ],œtypeœ:œstrœ}",
+        "animated": false,
+        "className": ""
       }
     ],
     "viewport": {
-      "x": 260.8274276298814,
-      "y": -297.2671838869172,
+      "x": 435.8274276298814,
+      "y": -167.26718388691722,
       "zoom": 0.44728176288692834
     }
   },
