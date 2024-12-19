@@ -45,6 +45,7 @@ Huggingface playground - https://huggingface.co/Langflow
 [![Watch the longer Demo](https://img.youtube.com/vi/RWo4GDTZIsE/hqdefault.jpg)](https://youtu.be/RWo4GDTZIsE)
 
 [![Watch the advanced Demo](https://img.youtube.com/vi/QmUsG_3wHPg/hqdefault.jpg)](https://youtu.be/QmUsG_3wHPg)
+https://github.com/techwithtim/Langflow-Customer-Support-Agent
 
 https://github.com/langflow-ai/LangflowComponent
 
@@ -56,6 +57,6 @@ https://github.com/langflow-ai/langflow/discussions/325
 
 https://github.com/mattreid1/langflow
 https://github.com/AI-App/LangFlow
-https://github.com/techwithtim/Langflow-Customer-Support-Agent
+
 
 
