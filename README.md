@@ -47,6 +47,9 @@ Huggingface playground - https://huggingface.co/Langflow
 [![Watch the advanced Demo](https://img.youtube.com/vi/QmUsG_3wHPg/hqdefault.jpg)](https://youtu.be/QmUsG_3wHPg)
 https://github.com/techwithtim/Langflow-Customer-Support-Agent
 
+[![Watch langflow AI shopping assistant with JAVA chatbot client](https://img.youtube.com/vi/Nyg8-8f-ScQ/hqdefault.jpg)](https://m.youtube.com/watch?v=Nyg8-8f-ScQ)
+JAVA client chatbot - https://github.com/aar0np/workshop_ecommerce_prototype/blob/main/README.md
+
 https://github.com/langflow-ai/LangflowComponent
 
 https://github.com/langflow-ai/langflow/issues/4913 
