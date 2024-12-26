@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import time
 import random 
+from pathlib import Path
 from langflow.load import run_flow_from_json
 TWEAKS = {
   "ChatInput-eU8kJ": {},
@@ -10,11 +11,23 @@ TWEAKS = {
 }
  
 def run_web_flow(scrape_url):
-	result = run_flow_from_json(flow="D:\code\langflow\SampleFlows\WebAgent\web-scrape-flow.json",
+	# Get current file's directory
+	current_dir = Path(__file__).parent
+
+	# Construct path to json relative to current file
+	flow_path = current_dir / "web-scrape-flow.json"
+
+	# Convert to string if needed
+	flow_path_str = str(flow_path)
+	raw_result = run_flow_from_json(flow=flow_path_str,#"D:\code\langflow\SampleFlows\WebAgent\web-scrape-flow.json",
                             input_value=scrape_url,
                             session_id="", # provide a session id if you want to use session state
                             fallback_to_env_vars=True, # False by default
                             tweaks=TWEAKS)
+	
+	print("Type of data:", type(raw_result))
+
+	result = raw_result[0].outputs[0].results['message'].data['text']
 
 	return result
 
@@ -199,10 +212,7 @@ if __name__ == '__main__':
 		page_url = base_url + str(page_number)
 		print(page_url)
 
-		response2 = run_web_flow(page_url)
-		print("Type of data:", type(response2))
-
-		doctype_html = response2[0].outputs[0].results['message'].data['text']
+		doctype_html = run_web_flow(page_url)
 		soup2 = BeautifulSoup(doctype_html, "html.parser")
 		
 		#<div class="a-section a-spacing-small puis-padding-left-small puis-padding-right-small"><div data-cy="title-recipe" class="a-section a-spacing-none a-spacing-top-small s-title-instructions-style"><a class="a-link-normal s-line-clamp-4 s-link-style a-text-normal" href="/Swimming-Goggles-Men-Women-Adults/dp/B097PVPKV4/ref=sr_1_6?dib=eyJ2IjoiMSJ9.CZq0nhNp9DsMI5PLCYaVG_FoAJhz1WwEF6HHkmkolY7d99OrfPzfOCO2fGD99GeyJOfdKB4eAl4Upfax5yb821GbRH5JRD7YDzGZZFU2pUDIbx-ANBRjDgx9DhFKnHu1Ri9YkQ8Wu-q3upykjtLLxFRE7p9q4JU6CkACyxiWG9yAkFyOvPhMRVyKqaCbggz-PswkHi6eyaXXKkDLddAVo_X-UVxgyl-K0QvNPUEFHymTliCqcAonz5aVvN8TTPWdAh0l-iDaw6GHzTj0kCkMwBDlWUfv2UmAB3NllPaUUmU.kG6icoQlFJuHMwnxOb77hILW1iAOpJckjS8g9WZ1odU&amp;dib_tag=se&amp;keywords=swim+goggle&amp;m=A2OAJ7377F756P&amp;nsdOptOutParam=true&amp;qid=1735230177&amp;s=warehouse-deals&amp;sr=8-6"><h2 aria-label="Swimming Goggles for Men Women Adults - Anti Fog Swim Goggles with Uv Protection, Clear Vision, No Leaking Silicone Cushion" class="a-size-base-plus a-spacing-none a-color-base a-text-normal"><span>Swimming Goggles for Men Women Adults - Anti Fog Swim Goggles with Uv Protection, Clear Vision, No Leaking Silicone Cushion</span></h2></a> </div><div data-cy="reviews-block" class="a-section a-spacing-none a-spacing-top-micro"><div class="a-row a-size-small"><span class="a-declarative" data-version-id="v1a1xfkvrhpsev211ons9lsmfw1" data-render-id="r32ppgk3yqgs9i2kh2vbe319xi1" data-action="a-popover" data-csa-c-func-deps="aui-da-a-popover" data-a-popover="{&quot;closeButton&quot;:true,&quot;closeButtonLabel&quot;:&quot;&quot;,&quot;activate&quot;:&quot;onmouseover&quot;,&quot;name&quot;:&quot;&quot;,&quot;position&quot;:&quot;triggerBottom&quot;,&quot;popoverLabel&quot;:&quot;4.3 out of 5 stars, rating details&quot;,&quot;url&quot;:&quot;/review/widgets/average-customer-review/popover/ref=acr_search__popover?ie=UTF8&amp;asin=B097PVPKV4&amp;ref_=acr_search__popover&amp;contextId=search&quot;}" data-csa-c-type="widget"><a aria-label="4.3 out of 5 stars, rating details" href="javascript:void(0)" role="button" class="a-popover-trigger a-declarative"><i data-cy="reviews-ratings-slot" aria-hidden="true" class="a-icon a-icon-star-small a-star-small-4-5"><span class="a-icon-alt">4.3 out of 5 stars</span></i><i class="a-icon a-icon-popover"></i></a></span> <a aria-label="2,117 ratings" class="a-link-normal s-underline-text s-underline-link-text s-link-style" href="/Swimming-Goggles-Men-Women-Adults/dp/B097PVPKV4/ref=sr_1_6?dib=eyJ2IjoiMSJ9.CZq0nhNp9DsMI5PLCYaVG_FoAJhz1WwEF6HHkmkolY7d99OrfPzfOCO2fGD99GeyJOfdKB4eAl4Upfax5yb821GbRH5JRD7YDzGZZFU2pUDIbx-ANBRjDgx9DhFKnHu1Ri9YkQ8Wu-q3upykjtLLxFRE7p9q4JU6CkACyxiWG9yAkFyOvPhMRVyKqaCbggz-PswkHi6eyaXXKkDLddAVo_X-UVxgyl-K0QvNPUEFHymTliCqcAonz5aVvN8TTPWdAh0l-iDaw6GHzTj0kCkMwBDlWUfv2UmAB3NllPaUUmU.kG6icoQlFJuHMwnxOb77hILW1iAOpJckjS8g9WZ1odU&amp;dib_tag=se&amp;keywords=swim+goggle&amp;m=A2OAJ7377F756P&amp;nsdOptOutParam=true&amp;qid=1735230177&amp;s=warehouse-deals&amp;sr=8-6#customerReviews"><span aria-hidden="true" class="a-size-base s-underline-text">2,117</span> </a> </div><div class="a-row a-size-base"><span class="a-size-base a-color-secondary">100+ bought in past month</span></div></div>
