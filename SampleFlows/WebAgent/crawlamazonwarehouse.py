@@ -149,12 +149,13 @@ def extract_product_info(soup):
             product['brand'] = brand_element.get_text(strip=True)
         
         # Extract full product title
-        title_element = div.find("h2", class_="a-size-medium a-spacing-none a-color-base a-text-normal")
+        title_element = div.find("h2", class_=["a-size-medium a-spacing-none a-color-base a-text-normal", 
+                                     "a-size-base-plus a-spacing-none a-color-base a-text-normal"])
         if title_element:
             product['title'] = title_element.find("span").get_text(strip=True)
-            
+
         # Extract product URL
-        link = div.find("a", class_="a-link-normal s-line-clamp-2 s-link-style a-text-normal")
+        link = div.find("a", class_=["a-link-normal s-line-clamp-2 s-link-style a-text-normal","a-link-normal s-line-clamp-4 s-link-style a-text-normal"])
         if link:
             product['href'] = link.get('href')
         
@@ -183,13 +184,13 @@ if __name__ == '__main__':
 
 	#https://www.octoparse.com/blog/how-to-scrape-amazon-data-using-python
 	#c:/code/py_playground/.venv/Scripts/python.exe c:/code/py_playground/crawlamazonwarehouse.py >> results\golf.txt
-	#.venv/Scripts/python.exe crawlamazonwarehouse.py >> results\gpu.txt
+	#.venv/Scripts/python.exe SampleFlows\WebAgent\crawlamazonwarehouse.py\crawlamazonwarehouse.py >> gpu.txt
 	#https://www.zenrows.com/blog/stealth-web-scraping-in-python-avoid-blocking-like-a-ninja#full-set-of-headers
 	headers2 = {
 	"User-Agent": random.choice(user_agents)}
 	domain_url = "https://www.amazon.co.uk"
 	# base_url = "https://www.amazon.co.uk/s?k=ddr4+ram+32gb&i=warehouse-deals&page="
-	base_url = "https://www.amazon.co.uk/s?k=nvidia&i=warehouse-deals&page="
+	base_url = "https://www.amazon.co.uk/s?k=golf&i=warehouse-deals&page="
 	for page_number in range(1, 2):
 		time.sleep(2)
 		# Create the new URL by replacing the page number
@@ -209,13 +210,12 @@ if __name__ == '__main__':
 
 			try:
 				href = product.get("href")
+				parts = href.split('/')
+				new_url = domain_url+"/dp/"+parts[3]
+				used_url = domain_url+"/"+href
 			except Exception as e:
 				continue
-			# print (href)
-			# Split the string using '/'
-			parts = href.split('/')
-			new_url = domain_url+"/dp/"+parts[3]
-			used_url = domain_url+"/"+href
+
 			new_price = get_product_price(new_url)
 			print(f"New price = {new_price}")
 			used_price = get_product_price(used_url)

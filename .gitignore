@@ -159,4 +159,5 @@ cython_debug/
 *.pkl
 *.csv
 *.faiss
+*.txt
 
