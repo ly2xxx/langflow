@@ -32,6 +32,9 @@ Run the app :
 python -m langflow run
 ```
 
+![Structured Data Extraction flow](Gallery/Ollama%20structured%20data%20extraction%202024-12-27%20200336.png)
+
+
 # Reference
 Official documentation - https://docs.langflow.org/get-started-quickstart
 
