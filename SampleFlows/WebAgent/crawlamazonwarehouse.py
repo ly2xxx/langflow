@@ -184,14 +184,14 @@ if __name__ == '__main__':
 
 	#https://www.octoparse.com/blog/how-to-scrape-amazon-data-using-python
 	#c:/code/py_playground/.venv/Scripts/python.exe c:/code/py_playground/crawlamazonwarehouse.py >> results\golf.txt
-	#.venv/Scripts/python.exe SampleFlows\WebAgent\crawlamazonwarehouse.py\crawlamazonwarehouse.py >> gpu.txt
+	#.venv/Scripts/python.exe SampleFlows\WebAgent\crawlamazonwarehouse.py >> golf.txt
 	#https://www.zenrows.com/blog/stealth-web-scraping-in-python-avoid-blocking-like-a-ninja#full-set-of-headers
 	headers2 = {
 	"User-Agent": random.choice(user_agents)}
 	domain_url = "https://www.amazon.co.uk"
 	# base_url = "https://www.amazon.co.uk/s?k=ddr4+ram+32gb&i=warehouse-deals&page="
 	base_url = "https://www.amazon.co.uk/s?k=golf&i=warehouse-deals&page="
-	for page_number in range(1, 2):
+	for page_number in range(3, 4):
 		time.sleep(2)
 		# Create the new URL by replacing the page number
 		page_url = base_url + str(page_number)
