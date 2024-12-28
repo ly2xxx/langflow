@@ -64,5 +64,10 @@ https://github.com/langflow-ai/langflow/discussions/325
 https://github.com/mattreid1/langflow
 https://github.com/AI-App/LangFlow
 
+# Custom tool component:
+extend - 
+https://github.com/langflow-ai/langflow/blob/main/src/backend/base/langflow/base/langchain_utilities/model.py
+example -
+https://github.com/langflow-ai/langflow/discussions/4093
 
 
