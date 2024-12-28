@@ -179,6 +179,39 @@ def extract_product_info(soup):
     
     return products
 
+def process_product_prices(new_url, used_url): #(product_section: str):
+    # # Extract URLs
+    # lines = product_section.strip().split('\n')
+    # new_url = None
+    # used_url = None
+    
+    # for line in lines:
+    #     if line.startswith('https://www.amazon.co.uk/dp/'):
+    #         new_url = line.strip()
+    #     elif line.startswith('https://www.amazon.co.uk//ECCO-'):
+    #         used_url = line.strip()
+    
+    # if not new_url or not used_url:
+    #     return
+        
+    # Get prices and calculate discount
+    new_price = get_product_price(new_url)
+    print(f"New price = {new_price}")
+    
+    used_price = get_product_price(used_url)
+    print(f"Used price = {used_price}")
+    
+    try:
+        discount = float(used_price[1:]) / float(new_price.split()[0][1:])
+    except Exception as e:
+        discount = 1.8
+        
+    print("Price discount =", discount)
+    if discount < 0.6:
+        print("BARGAIN!!!")
+
+    return discount
+
 
 if __name__ == '__main__':
 
@@ -216,15 +249,16 @@ if __name__ == '__main__':
 			except Exception as e:
 				continue
 
-			new_price = get_product_price(new_url)
-			print(f"New price = {new_price}")
-			used_price = get_product_price(used_url)
-			print(f"Used price = {used_price}")
-			try:
-				discount = float(used_price[1:]) / float(new_price.split()[0][1:])#deal with "£14.99 with 39 percent savings"
-			except Exception as e:
-				discount = 1.8
-			print("Price discount =", discount)
+			# new_price = get_product_price(new_url)
+			# print(f"New price = {new_price}")
+			# used_price = get_product_price(used_url)
+			# print(f"Used price = {used_price}")
+			# try:
+			# 	discount = float(used_price[1:]) / float(new_price.split()[0][1:])#deal with "£14.99 with 39 percent savings"
+			# except Exception as e:
+			# 	discount = 1.8
+			# print("Price discount =", discount)
+			discount = process_product_prices(new_url, used_url)
 			if (discount < 0.6):
 				print("BARGAIN!!!")
 				print(product.get("rating"))
@@ -236,3 +270,4 @@ if __name__ == '__main__':
 			print()
 			print()
 			print()
+
