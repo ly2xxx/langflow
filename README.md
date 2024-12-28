@@ -72,6 +72,7 @@ extend -
 https://github.com/langflow-ai/langflow/blob/main/src/backend/base/langflow/base/langchain_utilities/model.py
 
 example -
-https://github.com/langflow-ai/langflow/discussions/4093
+CustomComponent\DummyComponent.json
+(https://github.com/langflow-ai/langflow/discussions/4093)
 
 
