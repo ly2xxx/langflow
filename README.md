@@ -34,7 +34,7 @@ python -m langflow run
 
 ![Structured Data Extraction flow](Gallery/Ollama%20structured%20data%20extraction%202024-12-27%20200336.png)
 
-![Code checkout and analyser flow](Gallery/langflow-code-analyser 2025-01-01 134910.png)
+![Code checkout and analyser flow](Gallery/langflow-code-analyser-2025-01-01-134910.png)
 
 # Reference
 Official documentation - https://docs.langflow.org/get-started-quickstart
