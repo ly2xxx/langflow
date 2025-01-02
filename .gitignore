@@ -158,6 +158,8 @@ cython_debug/
 
 *.pkl
 *.csv
+# Allow CSV files in specific directory
+!SampleFlows/RAG/input/*.csv
 *.faiss
 *.txt
 
