@@ -19,7 +19,7 @@ import os
 class DocumentProcessor:
     def __init__(self):
         self.converter = DocumentConverter()
-        self.input_dir = os.path.join(os.path.dirname(__file__), "input")
+        self.input_dir = os.path.join(os.path.dirname(__file__), "input/factsheets")
         
     def process_all_pdfs(self):
         # Create input directory if it doesn't exist
