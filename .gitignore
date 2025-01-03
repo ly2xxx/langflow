@@ -162,4 +162,5 @@ cython_debug/
 !SampleFlows/RAG/input/*.csv
 *.faiss
 *.txt
+!SampleFlows/RAG/*.txt
 
