@@ -2145,12 +2145,13 @@
             "tool_mode": false,
             "category": "langchain_utilities",
             "key": "CharacterTextSplitter",
-            "score": 0.007761458725589881
+            "score": 0.007761458725589881,
+            "lf_version": "1.1.1"
           },
           "type": "CharacterTextSplitter",
           "id": "CharacterTextSplitter-hLbTD"
         },
-        "selected": true,
+        "selected": false,
         "width": 320,
         "height": 453,
         "positionAbsolute": {
@@ -2246,7 +2247,7 @@
                 "placeholder": "",
                 "show": true,
                 "name": "path",
-                "value": "",
+                "value": "E:\\code2\\langflow\\SampleFlows\\RAG\\input",
                 "display_name": "Path",
                 "advanced": false,
                 "input_types": [
@@ -2300,7 +2301,9 @@
                 "placeholder": "",
                 "show": true,
                 "name": "types",
-                "value": "",
+                "value": [
+                  "md"
+                ],
                 "display_name": "Types",
                 "advanced": false,
                 "input_types": [
@@ -2371,7 +2374,8 @@
             "tool_mode": false,
             "category": "data",
             "key": "Directory",
-            "score": 0.001
+            "score": 0.001,
+            "lf_version": "1.1.1"
           },
           "type": "Directory",
           "id": "Directory-DFC6K"
@@ -3056,6 +3060,245 @@
           "y": 1133.0149198469103
         },
         "dragging": false
+      },
+      {
+        "id": "ParseData-bf4yp",
+        "type": "genericNode",
+        "position": {
+          "x": 2257.1313351735835,
+          "y": 804.1044249141536
+        },
+        "data": {
+          "node": {
+            "template": {
+              "_type": "Component",
+              "data": {
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "list": false,
+                "trace_as_input": true,
+                "required": false,
+                "placeholder": "",
+                "show": true,
+                "name": "data",
+                "value": "",
+                "display_name": "Data",
+                "advanced": false,
+                "input_types": [
+                  "Data"
+                ],
+                "dynamic": false,
+                "info": "The data to convert to text.",
+                "title_case": false,
+                "type": "other",
+                "_input_type": "DataInput"
+              },
+              "code": {
+                "type": "code",
+                "required": true,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": true,
+                "value": "from langflow.custom import Component\nfrom langflow.helpers.data import data_to_text\nfrom langflow.io import DataInput, MultilineInput, Output, StrInput\nfrom langflow.schema.message import Message\n\n\nclass ParseDataComponent(Component):\n    display_name = \"Parse Data\"\n    description = \"Convert Data into plain text following a specified template.\"\n    icon = \"braces\"\n    name = \"ParseData\"\n\n    inputs = [\n        DataInput(name=\"data\", display_name=\"Data\", info=\"The data to convert to text.\"),\n        MultilineInput(\n            name=\"template\",\n            display_name=\"Template\",\n            info=\"The template to use for formatting the data. \"\n            \"It can contain the keys {text}, {data} or any other key in the Data.\",\n            value=\"{text}\",\n        ),\n        StrInput(name=\"sep\", display_name=\"Separator\", advanced=True, value=\"\\n\"),\n    ]\n\n    outputs = [\n        Output(display_name=\"Text\", name=\"text\", method=\"parse_data\"),\n    ]\n\n    def parse_data(self) -> Message:\n        data = self.data if isinstance(self.data, list) else [self.data]\n        template = self.template\n\n        result_string = data_to_text(template, data, sep=self.sep)\n        self.status = result_string\n        return Message(text=result_string)\n",
+                "fileTypes": [],
+                "file_path": "",
+                "password": false,
+                "name": "code",
+                "advanced": true,
+                "dynamic": true,
+                "info": "",
+                "load_from_db": false,
+                "title_case": false
+              },
+              "sep": {
+                "trace_as_metadata": true,
+                "load_from_db": false,
+                "list": false,
+                "required": false,
+                "placeholder": "",
+                "show": true,
+                "name": "sep",
+                "value": "\n",
+                "display_name": "Separator",
+                "advanced": true,
+                "dynamic": false,
+                "info": "",
+                "title_case": false,
+                "type": "str",
+                "_input_type": "StrInput"
+              },
+              "template": {
+                "tool_mode": false,
+                "trace_as_input": true,
+                "multiline": true,
+                "trace_as_metadata": true,
+                "load_from_db": false,
+                "list": false,
+                "required": false,
+                "placeholder": "",
+                "show": true,
+                "name": "template",
+                "value": "{file_path}",
+                "display_name": "Template",
+                "advanced": false,
+                "input_types": [
+                  "Message"
+                ],
+                "dynamic": false,
+                "info": "The template to use for formatting the data. It can contain the keys {text}, {data} or any other key in the Data.",
+                "title_case": false,
+                "type": "str",
+                "_input_type": "MultilineInput"
+              }
+            },
+            "description": "Convert Data into plain text following a specified template.",
+            "icon": "braces",
+            "base_classes": [
+              "Message"
+            ],
+            "display_name": "Parse Data",
+            "documentation": "",
+            "custom_fields": {},
+            "output_types": [],
+            "pinned": false,
+            "conditional_paths": [],
+            "frozen": false,
+            "outputs": [
+              {
+                "types": [
+                  "Message"
+                ],
+                "selected": "Message",
+                "name": "text",
+                "display_name": "Text",
+                "method": "parse_data",
+                "value": "__UNDEFINED__",
+                "cache": true
+              }
+            ],
+            "field_order": [
+              "data",
+              "template",
+              "sep"
+            ],
+            "beta": false,
+            "legacy": false,
+            "edited": false,
+            "metadata": {},
+            "tool_mode": false,
+            "lf_version": "1.1.1"
+          },
+          "type": "ParseData",
+          "id": "ParseData-bf4yp"
+        },
+        "selected": true,
+        "width": 320,
+        "height": 309,
+        "positionAbsolute": {
+          "x": 2257.1313351735835,
+          "y": 804.1044249141536
+        },
+        "dragging": false
+      },
+      {
+        "id": "TextOutput-PH5ao",
+        "type": "genericNode",
+        "position": {
+          "x": 2276.8356505382194,
+          "y": 1210.3164647389403
+        },
+        "data": {
+          "node": {
+            "template": {
+              "_type": "Component",
+              "code": {
+                "type": "code",
+                "required": true,
+                "placeholder": "",
+                "list": false,
+                "show": true,
+                "multiline": true,
+                "value": "from langflow.base.io.text import TextComponent\nfrom langflow.io import MultilineInput, Output\nfrom langflow.schema.message import Message\n\n\nclass TextOutputComponent(TextComponent):\n    display_name = \"Text Output\"\n    description = \"Display a text output in the Playground.\"\n    icon = \"type\"\n    name = \"TextOutput\"\n\n    inputs = [\n        MultilineInput(\n            name=\"input_value\",\n            display_name=\"Text\",\n            info=\"Text to be passed as output.\",\n        ),\n    ]\n    outputs = [\n        Output(display_name=\"Text\", name=\"text\", method=\"text_response\"),\n    ]\n\n    def text_response(self) -> Message:\n        message = Message(\n            text=self.input_value,\n        )\n        self.status = self.input_value\n        return message\n",
+                "fileTypes": [],
+                "file_path": "",
+                "password": false,
+                "name": "code",
+                "advanced": true,
+                "dynamic": true,
+                "info": "",
+                "load_from_db": false,
+                "title_case": false
+              },
+              "input_value": {
+                "tool_mode": false,
+                "trace_as_input": true,
+                "multiline": true,
+                "trace_as_metadata": true,
+                "load_from_db": false,
+                "list": false,
+                "required": false,
+                "placeholder": "",
+                "show": true,
+                "name": "input_value",
+                "value": "",
+                "display_name": "Text",
+                "advanced": false,
+                "input_types": [
+                  "Message"
+                ],
+                "dynamic": false,
+                "info": "Text to be passed as output.",
+                "title_case": false,
+                "type": "str",
+                "_input_type": "MultilineInput"
+              }
+            },
+            "description": "Display a text output in the Playground.",
+            "icon": "type",
+            "base_classes": [
+              "Message"
+            ],
+            "display_name": "Text Output",
+            "documentation": "",
+            "custom_fields": {},
+            "output_types": [],
+            "pinned": false,
+            "conditional_paths": [],
+            "frozen": false,
+            "outputs": [
+              {
+                "types": [
+                  "Message"
+                ],
+                "selected": "Message",
+                "name": "text",
+                "display_name": "Text",
+                "method": "text_response",
+                "value": "__UNDEFINED__",
+                "cache": true
+              }
+            ],
+            "field_order": [
+              "input_value"
+            ],
+            "beta": false,
+            "legacy": false,
+            "edited": false,
+            "metadata": {},
+            "tool_mode": false
+          },
+          "type": "TextOutput",
+          "id": "TextOutput-PH5ao"
+        },
+        "selected": false,
+        "width": 320,
+        "height": 233,
+        "positionAbsolute": {
+          "x": 2276.8356505382194,
+          "y": 1210.3164647389403
+        },
+        "dragging": false
       }
     ],
     "edges": [
@@ -3519,11 +3762,61 @@
         "id": "reactflow__edge-MessagetoData-nFQyU{œdataTypeœ:œMessagetoDataœ,œidœ:œMessagetoData-nFQyUœ,œnameœ:œdataœ,œoutput_typesœ:[œDataœ]}-SplitText-vguy1{œfieldNameœ:œdata_inputsœ,œidœ:œSplitText-vguy1œ,œinputTypesœ:[œDataœ],œtypeœ:œotherœ}",
         "animated": false,
         "className": ""
+      },
+      {
+        "source": "Directory-DFC6K",
+        "sourceHandle": "{œdataTypeœ:œDirectoryœ,œidœ:œDirectory-DFC6Kœ,œnameœ:œdataœ,œoutput_typesœ:[œDataœ]}",
+        "target": "ParseData-bf4yp",
+        "targetHandle": "{œfieldNameœ:œdataœ,œidœ:œParseData-bf4ypœ,œinputTypesœ:[œDataœ],œtypeœ:œotherœ}",
+        "data": {
+          "targetHandle": {
+            "fieldName": "data",
+            "id": "ParseData-bf4yp",
+            "inputTypes": [
+              "Data"
+            ],
+            "type": "other"
+          },
+          "sourceHandle": {
+            "dataType": "Directory",
+            "id": "Directory-DFC6K",
+            "name": "data",
+            "output_types": [
+              "Data"
+            ]
+          }
+        },
+        "id": "reactflow__edge-Directory-DFC6K{œdataTypeœ:œDirectoryœ,œidœ:œDirectory-DFC6Kœ,œnameœ:œdataœ,œoutput_typesœ:[œDataœ]}-ParseData-bf4yp{œfieldNameœ:œdataœ,œidœ:œParseData-bf4ypœ,œinputTypesœ:[œDataœ],œtypeœ:œotherœ}"
+      },
+      {
+        "source": "ParseData-bf4yp",
+        "sourceHandle": "{œdataTypeœ:œParseDataœ,œidœ:œParseData-bf4ypœ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ]}",
+        "target": "TextOutput-PH5ao",
+        "targetHandle": "{œfieldNameœ:œinput_valueœ,œidœ:œTextOutput-PH5aoœ,œinputTypesœ:[œMessageœ],œtypeœ:œstrœ}",
+        "data": {
+          "targetHandle": {
+            "fieldName": "input_value",
+            "id": "TextOutput-PH5ao",
+            "inputTypes": [
+              "Message"
+            ],
+            "type": "str"
+          },
+          "sourceHandle": {
+            "dataType": "ParseData",
+            "id": "ParseData-bf4yp",
+            "name": "text",
+            "output_types": [
+              "Message"
+            ]
+          }
+        },
+        "id": "reactflow__edge-ParseData-bf4yp{œdataTypeœ:œParseDataœ,œidœ:œParseData-bf4ypœ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ]}-TextOutput-PH5ao{œfieldNameœ:œinput_valueœ,œidœ:œTextOutput-PH5aoœ,œinputTypesœ:[œMessageœ],œtypeœ:œstrœ}"
       }
     ],
     "viewport": {
-      "x": -319.75132620746444,
-      "y": -313.5110748808572,
+      "x": -418.1513262074644,
+      "y": -327.5110748808572,
       "zoom": 0.6597539553864471
     }
   },
