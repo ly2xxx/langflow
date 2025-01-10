@@ -26,8 +26,17 @@ Install the required dependencies in the virtual environment :
 ```bash
 pip install langflow --use-deprecated=legacy-resolver
 ```
+or
+```bash
+python -m pip install langflow -U  --use-deprecated=legacy-resolver --no-build-isolation
+```
 
-Run the app :
+If you encounter timeout, try to increase timeout threshold
+```bash
+pip install langflow --default-timeout=1000 --use-deprecated=legacy-resolver --no-build-isolation
+```
+
+### Run the app :
 ```bash
 python -m langflow run
 ```
