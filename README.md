@@ -85,4 +85,5 @@ example -
 CustomComponent\DummyComponent.json
 (https://github.com/langflow-ai/langflow/discussions/4093)
 
-
+releases -
+https://github.com/langflow-ai/langflow/releases/tag/1.1.2 - not verified yet
