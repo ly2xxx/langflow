@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)http://localhost:5001/chat/NTHBSHg2Snvm25tBEaBipx -->
+<html data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Always be courious.</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <script src="./PythonFunctionTool_files/htmx.min.js.download"></script>
+    <script src="./PythonFunctionTool_files/surreal.js.download"></script>
+    <script src="./PythonFunctionTool_files/script.js.download"></script>
+    <link rel="stylesheet" href="./PythonFunctionTool_files/pico.min.css">
+    <style>:root { --pico-font-size: 100%; }</style>
+    <link rel="stylesheet" href="./PythonFunctionTool_files/pico.min.css">
+    <style>:root { --pico-font-size: 100%; }</style>
+    <link rel="stylesheet" href="./PythonFunctionTool_files/pico.colors.min.css" type="text/css">
+    <meta name="color-scheme" content="light dark">
+    <script type="module">
+import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+import { proc_htmx} from "https://cdn.jsdelivr.net/gh/answerdotai/fasthtml-js/fasthtml.js";
+proc_htmx('.marked', e => e.innerHTML = marked.parse(e.textContent));
+</script>
+    <script>
+    (function() {
+        var socket = new WebSocket(`ws://${window.location.host}/live-reload`);
+        var maxReloadAttempts = 20;
+        var reloadInterval = 250; // time between reload attempts in ms
+        socket.onclose = function() {
+            let reloadAttempts = 0;
+            const intervalFn = setInterval(function(){
+                window.location.reload();
+                reloadCount++;
+                if (reloadAttempts === maxReloadAttempts) clearInterval(intervalFn);
+            }, reloadInterval);
+        }
+    })();
+</script>
+    <script src="./PythonFunctionTool_files/ws.js.download"></script>
+  <style>      .htmx-indicator{opacity:0}      .htmx-request .htmx-indicator{opacity:1; transition: opacity 200ms ease-in;}      .htmx-request.htmx-indicator{opacity:1; transition: opacity 200ms ease-in;}      </style></head>
+  <body hx-ext="ws" ws-connect="/ws_connect" class="container">
+
+  <header>
+    <nav>
+      <ul>
+        <li>
+          <hgroup>
+            <h3>Be Curious!</h3>
+            <p>There are no stupid questions.</p>
+          </hgroup>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <button onclick="window.location.href=&#39;/chat/KHeAgDghgduUqwvTtqxS3x&#39;" class="secondary">New question</button>
+        </li>
+        <li>
+          <details id="model" class="dropdown">
+            <summary>Model</summary>
+            <ul dir="rtl">
+              <li dir="ltr">
+                <label>
+GPT-4o-mini (OpenAI)
+                  <input name="model" type="radio" value="gpt-4o-mini" hx-target="#model" hx-swap="outerHTML" hx-get="/model">
+                </label>
+              </li>
+              <li dir="ltr">
+                <label>
+Llama 3.2 3b (Ollama)
+                  <input name="model" type="radio" value="llama3.2" checked="" hx-target="#model" hx-swap="outerHTML" hx-get="/model">
+                </label>
+              </li>
+              <li dir="ltr">
+                <label>
+Llama 3.1 70b (Groq)
+                  <input name="model" type="radio" value="llama-3.1-70b-versatile" hx-target="#model" hx-swap="outerHTML" hx-get="/model">
+                </label>
+              </li>
+              <li dir="ltr">
+                <label>
+Llama 3 8b tool use (Groq)
+                  <input name="model" type="radio" value="llama3-groq-8b-8192-tool-use-preview" hx-target="#model" hx-swap="outerHTML" hx-get="/model">
+                </label>
+              </li>
+              <li dir="ltr">
+                <label>
+Llama 3 70b tool use (Groq)
+                  <input name="model" type="radio" value="llama3-groq-70b-8192-tool-use-preview" hx-target="#model" hx-swap="outerHTML" hx-get="/model">
+                </label>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <details id="question-list" class="dropdown">
+  <summary>Your last 25 questions</summary>
+  <ul dir="rtl">
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/NTHBSHg2Snvm25tBEaBipx" id="NTHBSHg2Snvm25tBEaBipx" name="NTHBSHg2Snvm25tBEaBipx">langflow PythonFunctionTool example github</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/DQbQ9RH7xcyfhciC4xNLwH" id="DQbQ9RH7xcyfhciC4xNLwH" name="DQbQ9RH7xcyfhciC4xNLwH">python download from Onedrive Sharepoint code examples</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/mKVYnzurYHYRXZZJhHMKL8" id="mKVYnzurYHYRXZZJhHMKL8" name="mKVYnzurYHYRXZZJhHMKL8">Is there a way to make gitlab duo coding assistant aware...</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/3UTQuVWzW6SP8QMtBNVhvA" id="3UTQuVWzW6SP8QMtBNVhvA" name="3UTQuVWzW6SP8QMtBNVhvA">drawioedit png file to xml</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/BC5o3fAaPmfejqWLZYmeYZ" id="BC5o3fAaPmfejqWLZYmeYZ" name="BC5o3fAaPmfejqWLZYmeYZ">copilotkit.ai on streamlit</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/8u22c3JvGKeSH7nmUVs4uY" id="8u22c3JvGKeSH7nmUVs4uY" name="8u22c3JvGKeSH7nmUVs4uY">continue VS code assistant</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/Z2MdXfqgKKhLZLF7tQe8Ys" id="Z2MdXfqgKKhLZLF7tQe8Ys" name="Z2MdXfqgKKhLZLF7tQe8Ys">python latex library pptx</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/2Y82hQsxXMaYX3kqxwLMfH" id="2Y82hQsxXMaYX3kqxwLMfH" name="2Y82hQsxXMaYX3kqxwLMfH">Generative AI chat ppt generation github</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/K7aCFHm8rMsCbLYCqNsr5i" id="K7aCFHm8rMsCbLYCqNsr5i" name="K7aCFHm8rMsCbLYCqNsr5i">free python pdf to ppt solution</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/jGsTh4c9qR3yhyB64Xx4V6" id="jGsTh4c9qR3yhyB64Xx4V6" name="jGsTh4c9qR3yhyB64Xx4V6">Research sample project to use locally hosted...</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/PrMfpWnnzJL36uhvTFyc2y" id="PrMfpWnnzJL36uhvTFyc2y" name="PrMfpWnnzJL36uhvTFyc2y">find sample github python project to upload file to...</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/UDsSweTJy2rA4kiXx6o8Fs" id="UDsSweTJy2rA4kiXx6o8Fs" name="UDsSweTJy2rA4kiXx6o8Fs">Find a way to watch sci-fi movie 'her' online for free</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/ckyDbw2mY7GKyCQqMjn2wu" id="ckyDbw2mY7GKyCQqMjn2wu" name="ckyDbw2mY7GKyCQqMjn2wu">watch Coraline for free online</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/3HZKhy2j4qArrQCN4AurF7" id="3HZKhy2j4qArrQCN4AurF7" name="3HZKhy2j4qArrQCN4AurF7">Crucial P3 Plus SSD 1TB M.2 NVMe PCIe Gen4 Internal SSD...</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/SeT3knrdJm99x7w3obrocy" id="SeT3knrdJm99x7w3obrocy" name="SeT3knrdJm99x7w3obrocy">How to generate powerpoint slides from SQL server query...</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/LG2N7md6w3jmfpuYKkdHxZ" id="LG2N7md6w3jmfpuYKkdHxZ" name="LG2N7md6w3jmfpuYKkdHxZ">python drawio library</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/HiLLX6TNwZqEHmDy7uGUXb" id="HiLLX6TNwZqEHmDy7uGUXb" name="HiLLX6TNwZqEHmDy7uGUXb">How to render a streamlit subpage in a streamlit main page?</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/TtBAYsygZxUgmcu783UfPJ" id="TtBAYsygZxUgmcu783UfPJ" name="TtBAYsygZxUgmcu783UfPJ">langgraph streamlit chatbot examples</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/TyLjRcPTSGvg4GfzTXkBZM" id="TyLjRcPTSGvg4GfzTXkBZM" name="TyLjRcPTSGvg4GfzTXkBZM">UK pizza discount code</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/V3oEnQxed6rXBkrgKsF3Um" id="V3oEnQxed6rXBkrgKsF3Um" name="V3oEnQxed6rXBkrgKsF3Um">LLM agent to convert drawio diagram to C4 Lint</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/JDh23UhAYiuGVDqqMsCAs3" id="JDh23UhAYiuGVDqqMsCAs3" name="JDh23UhAYiuGVDqqMsCAs3">What are the options to overcome racial ethnic bias...</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/mQg3JT2ws5kRGgFZvcfMwG" id="mQg3JT2ws5kRGgFZvcfMwG" name="mQg3JT2ws5kRGgFZvcfMwG">Look for streamlit langgraph chatbot examples</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/a5gvceMdVDwPpXNbhL7LfD" id="a5gvceMdVDwPpXNbhL7LfD" name="a5gvceMdVDwPpXNbhL7LfD">Last minute European travel package from Glasgow</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/6AdRRFn8t7k5PgvuzWQbj5" id="6AdRRFn8t7k5PgvuzWQbj5" name="6AdRRFn8t7k5PgvuzWQbj5">This GPT serves as an event attendance, market analysis,...</a>
+    </li>
+    <li dir="ltr">
+      <a href="http://localhost:5001/chat/BarSaBV5N3ygLjEe5F9wqC" id="BarSaBV5N3ygLjEe5F9wqC" name="BarSaBV5N3ygLjEe5F9wqC">Research SQLAgent GenAI text to SQL library</a>
+    </li>
+  </ul>
+</details>
+        </li>
+        <li>
+          <details id="theme-dropdown" class="dropdown">
+            <summary role="button" class="secondary">Theme</summary>
+            <ul>
+              <li>
+                <a href="http://localhost:5001/chat/NTHBSHg2Snvm25tBEaBipx#theme-dropdown" data-theme-switcher="auto">Auto</a>
+              </li>
+              <li>
+                <a href="http://localhost:5001/chat/NTHBSHg2Snvm25tBEaBipx#theme-dropdown" data-theme-switcher="light">Light</a>
+              </li>
+              <li>
+                <a href="http://localhost:5001/chat/NTHBSHg2Snvm25tBEaBipx#theme-dropdown" data-theme-switcher="dark">Dark</a>
+              </li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <main class="page-dropdown">
+    <div>
+      <form role="search" hx-post="/chat/NTHBSHg2Snvm25tBEaBipx" hx-swap="afterbegin" hx-target="#answer-list" id="search-group" name="search-group">
+        <fieldset role="group">
+          <input name="question" autofocus="" placeholder="Ask your question here..." autocomplete="off" id="new-question">
+          <button id="answer-btn" class="hidden-default" name="answer-btn">Answer</button>
+        </fieldset>
+      </form>
+    </div>
+  </main>
+  <footer>
+    <div id="answer-list">
+      <article id="7k7PkyfnEVkWwhZ37QNB3U">
+        <header>
+          <div>
+            <strong>langflow PythonFunctionTool example github</strong>
+            <small class="pico-color-grey-200">llama3.2</small>
+          </div>
+        </header>
+        <div class="marked">Here's an example of how you can define a Python function tool in LangFlow:
+
+```python
+from langflow import PythonCodeStructuredTool, PythonREPLToolComponent
+
+class AddTwoNumbers(PythonCodeStructuredTool):
+    def __init__(self):
+        super().__init__()
+        self.name = "Add Two Numbers"
+        self.description = "Adds two numbers together."
+        self.code = """
+def add_two_numbers(a, b):
+    return a + b
+"""
+        self.fields = [
+            {"name": "a", "type": "number"},
+            {"name": "b", "type": "number"}
+        ]
+
+class Tool(PythonREPLToolComponent):
+    def __init__(self):
+        super().__init__()
+        self.add_two_numbers = AddTwoNumbers()
+
+tool = Tool()
+```
+
+This code defines a tool that adds two numbers together. The `AddTwoNumbers` class is a subclass of `PythonCodeStructuredTool`, which provides the basic structure for defining a Python function tool. The `fields` attribute specifies the input parameters for the function, and the `code` attribute contains the source code for the function.
+
+You can then use this tool in your LangFlow flow by adding it to the `tools` list:
+
+```python
+flow = Flow()
+flow.add_tool(tool)
+```
+
+This will create a new flow that includes the "Add Two Numbers" tool. You can then execute the flow and pass input values for the function's parameters, like so:
+
+```python
+result = flow.execute({"a": 2, "b": 3})
+print(result)  # Output: 5
+```
+
+This will add 2 and 3 together and print the result.</div>
+        <div class="grid">
+          <a href="./PythonFunctionTool_files/1719">
+            <img src="./PythonFunctionTool_files/1719">
+          </a>
+          <a href="./PythonFunctionTool_files/4f740021-0613-42a3-a475-c712495710d6">
+            <img src="./PythonFunctionTool_files/4f740021-0613-42a3-a475-c712495710d6">
+          </a>
+          <a href="./PythonFunctionTool_files/280068659-0af14378-b9fa-40b8-8a4e-a7e23ad1b5a2.png">
+            <img src="./PythonFunctionTool_files/280068659-0af14378-b9fa-40b8-8a4e-a7e23ad1b5a2.png">
+          </a>
+          <a href="./PythonFunctionTool_files/237278927-36e98eb5-302f-4fc6-b03f-f4f55120d57f.png">
+            <img src="./PythonFunctionTool_files/237278927-36e98eb5-302f-4fc6-b03f-f4f55120d57f.png">
+          </a>
+          <a href="./PythonFunctionTool_files/280068168-84483b39-5c7f-44db-9b3c-fa882cfa934b.png">
+            <img src="./PythonFunctionTool_files/280068168-84483b39-5c7f-44db-9b3c-fa882cfa934b.png">
+          </a>
+        </div>
+        <footer>
+          <div class="grid">
+            <div>
+              <a href="https://github.com/langflow-ai/langflow/discussions/2035">create our own tool. · langflow-ai langflow · Discussion #2035 - GitHub</a>
+            </div>
+            <div>
+              <a href="https://github.com/langflow-ai/langflow/issues/2940">PythonCodeTool component usage · Issue #2940 · langflow-ai ... - GitHub</a>
+            </div>
+            <div>
+              <a href="https://46.3.104.18/langflow-ai/langflow_examples/blob/main/examples/Getting_started__python_function_applied_to_each_output.json">langflow_examples/examples/Getting_started__python_function_applied_to ...</a>
+            </div>
+            <div>
+              <a href="https://gist.github.com/skaag/3cc16d6addb9fb3bfc71dce052f1d6ab">An example LangFlow "Tool" that fetches data from a URL · GitHub</a>
+            </div>
+            <div>
+              <a href="https://github.com/LazyBuilder/langflow-example">GitHub - LazyBuilder/langflow-example: Langflow is a low-code app ...</a>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </div>
+  </footer>
+  <script src="./PythonFunctionTool_files/minimal-theme-switcher.js.download"></script>
+
+  
+
+</body></html>
