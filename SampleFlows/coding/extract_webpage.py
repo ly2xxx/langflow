@@ -31,7 +31,7 @@ async def extract_webpage(url):
         return data
 
 async def run():
-    url = "https://identitysso.betfair.com/view/login"
+    url = "https://sports.ladbrokes.com/sport/football/live"
     data = await extract_webpage(url)
     print(data)
 
