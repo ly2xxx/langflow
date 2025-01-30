@@ -47,7 +47,7 @@ async def extract_clean_content(url):
 
 # Usage
 async def main():
-    url = "https://sports.ladbrokes.com/sport/football/matches/today"
+    url = "https://www.skyscanner.net/transport/flights/GLAS/CSHA/cheapest-flights-from-Glasgow-to-Shanghai.html?oym=2504&iym=2504&preferDirects=false&qp_prevPrice=378&qp_prevProvider=mas_adfeeds&qp_prevCurrency=GBP&utm_medium=display&utm_source=criteo&utm_campaign=uk-flights-conversion-cookiepool&utm_content=feed&utm_term=71517&AssociateID=DIS_FLI_00053_00000&campaign_id=21172&adgroupid=71517&click_timestamp=1738103951&utm_id=71517&cto_pld=sZgC93gLAAD9us0aCVsoLg&selectedoday=01&selectediday=01"
     clean_content = await extract_clean_content(url)
     print("Title:", clean_content['title'])
     print("\nMain Content:")

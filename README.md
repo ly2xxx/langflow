@@ -5,7 +5,7 @@ langflow
 - Python 3.10 or higher
 - Git
 
-### Installation
+### Installation langflow 1.1.1
 Clone the repository :
 ```bash
 git clone https://github.com/ly2xxx/langflow.git
@@ -24,17 +24,31 @@ python -m venv .venv
 
 Install the required dependencies in the virtual environment :
 ```bash
-pip install langflow --use-deprecated=legacy-resolver
+pip install langflow==1.1.1 --use-deprecated=legacy-resolver
 ```
 or
 ```bash
-python -m pip install langflow -U  --use-deprecated=legacy-resolver --no-build-isolation
+python -m pip install langflow==1.1.1 -U  --use-deprecated=legacy-resolver --no-build-isolation
 ```
 
 If you encounter timeout, try to increase timeout threshold
 ```bash
-pip install langflow --default-timeout=1000 --use-deprecated=legacy-resolver --no-build-isolation
+pip install langflow==1.1.1 --default-timeout=1000 --use-deprecated=legacy-resolver --no-build-isolation
 ```
+
+### Installation langflow 1.1.3 with uv
+Create a virtual environment :
+```bash
+conda create --name langflow113  python=3.12
+conda activate langflow113
+```
+
+Install the required dependencies in the virtual environment :
+```bash
+pip install uv==0.5.26
+uv pip install langflow==1.1.3
+```
+
 
 ### Run the app :
 ```bash
