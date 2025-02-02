@@ -46,8 +46,9 @@ async def extract_clean_content(url):
         return clean_data
 
 # Usage
-async def main():
-    url = "https://www.skyscanner.net/transport/flights/GLAS/CSHA/cheapest-flights-from-Glasgow-to-Shanghai.html?oym=2504&iym=2504&preferDirects=false&qp_prevPrice=378&qp_prevProvider=mas_adfeeds&qp_prevCurrency=GBP&utm_medium=display&utm_source=criteo&utm_campaign=uk-flights-conversion-cookiepool&utm_content=feed&utm_term=71517&AssociateID=DIS_FLI_00053_00000&campaign_id=21172&adgroupid=71517&click_timestamp=1738103951&utm_id=71517&cto_pld=sZgC93gLAAD9us0aCVsoLg&selectedoday=01&selectediday=01"
+async def main(url):
+    # url = "https://www.skyscanner.net/transport/flights/GLAS/CSHA/cheapest-flights-from-Glasgow-to-Shanghai.html?oym=2504&iym=2504&preferDirects=false&qp_prevPrice=378&qp_prevProvider=mas_adfeeds&qp_prevCurrency=GBP&utm_medium=display&utm_source=criteo&utm_campaign=uk-flights-conversion-cookiepool&utm_content=feed&utm_term=71517&AssociateID=DIS_FLI_00053_00000&campaign_id=21172&adgroupid=71517&click_timestamp=1738103951&utm_id=71517&cto_pld=sZgC93gLAAD9us0aCVsoLg&selectedoday=01&selectediday=01"
+    # url = "https://footballdatabase.com/ranking/world/1"
     clean_content = await extract_clean_content(url)
     print("Title:", clean_content['title'])
     print("\nMain Content:")
@@ -58,4 +59,5 @@ async def main():
         print(f"- {link['text']}: {link['url']}")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    url = "https://www.skyscanner.net/transport/flights/GLAS/CSHA/cheapest-flights-from-Glasgow-to-Shanghai.html?oym=2507&iym=2508&preferDirects=false&qp_prevPrice=378&qp_prevProvider=mas_adfeeds&qp_prevCurrency=GBP&utm_medium=display&utm_source=criteo&utm_campaign=uk-flights-conversion-cookiepool&utm_content=feed&utm_term=71517&AssociateID=DIS_FLI_00053_00000&campaign_id=21172&adgroupid=71517&click_timestamp=1738103951&utm_id=71517&cto_pld=sZgC93gLAAD9us0aCVsoLg&selectedoday=21&selectediday=11"
+    asyncio.run(main(url))
