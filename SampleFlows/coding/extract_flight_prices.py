@@ -10,7 +10,14 @@ class FlightPriceExtractor:
 
     async def extract_prices(self, url):
         clean_content = await extract_clean_content(url)
-        
+        print("Title:", clean_content['title'])
+        print("\nMain Content:")
+        for item in clean_content['main_content']:
+            print(f"{item['type'].upper()}: {item['text']}")
+        print("\nLinks:")
+        for link in clean_content['links']:
+            print(f"- {link['text']}: {link['url']}")
+            
         found_monthly_prices = False
         prices_data = []
         
