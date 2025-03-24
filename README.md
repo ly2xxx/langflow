@@ -75,6 +75,12 @@ Huggingface playground - https://huggingface.co/Langflow
 https://github.com/techwithtim/Langflow-Customer-Support-Agent
 
 [![Watch langflow AI shopping assistant with JAVA chatbot client](https://img.youtube.com/vi/Nyg8-8f-ScQ/hqdefault.jpg)](https://m.youtube.com/watch?v=Nyg8-8f-ScQ)
+
+[![ Langflow as an MCP client](https://img.youtube.com/vi/K1Zy8lPl9BM/hqdefault.jpg)](https://m.youtube.com/watch?v=K1Zy8lPl9BM)
+
+[![ Langflow as an MCP server](https://img.youtube.com/vi/vi40dn79Zgw/hqdefault.jpg)](https://m.youtube.com/watch?v=vi40dn79Zgw)
+
+
 JAVA client chatbot - https://github.com/aar0np/workshop_ecommerce_prototype/blob/main/README.md
 
 https://github.com/langflow-ai/LangflowComponent
