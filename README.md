@@ -36,17 +36,17 @@ If you encounter timeout, try to increase timeout threshold
 pip install langflow==1.1.1 --default-timeout=1000 --use-deprecated=legacy-resolver --no-build-isolation
 ```
 
-### Installation langflow 1.1.3 with uv
+### Installation langflow 1.2.0 with uv
 Create a virtual environment :
 ```bash
-conda create --name langflow113  python=3.12
-conda activate langflow113
+conda create --name langflow120  python=3.12
+conda activate langflow120
 ```
 
 Install the required dependencies in the virtual environment :
 ```bash
 pip install uv==0.5.26
-uv pip install langflow==1.1.3
+uv pip install langflow==1.2.0
 ```
 
 
@@ -76,9 +76,12 @@ https://github.com/techwithtim/Langflow-Customer-Support-Agent
 
 [![Watch langflow AI shopping assistant with JAVA chatbot client](https://img.youtube.com/vi/Nyg8-8f-ScQ/hqdefault.jpg)](https://m.youtube.com/watch?v=Nyg8-8f-ScQ)
 
+[![ MCP explained](https://img.youtube.com/vi/L94WBLL0KjY/hqdefault.jpg)](https://m.youtube.com/watch?v=L94WBLL0KjY)
+
 [![ Langflow as an MCP client](https://img.youtube.com/vi/K1Zy8lPl9BM/hqdefault.jpg)](https://m.youtube.com/watch?v=K1Zy8lPl9BM)
 
 [![ Langflow as an MCP server](https://img.youtube.com/vi/vi40dn79Zgw/hqdefault.jpg)](https://m.youtube.com/watch?v=vi40dn79Zgw)
+
 
 
 JAVA client chatbot - https://github.com/aar0np/workshop_ecommerce_prototype/blob/main/README.md
