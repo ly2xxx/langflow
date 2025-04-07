@@ -19,6 +19,7 @@ Step 2: Run Langflow Docker Image
 docker run -it --rm -p 7880:7860 langflowai/langflow:latest
 ```
     or if you want to keep the container
+    
 ```bash
 docker run -it -p 7880:7860 langflowai/langflow:latest
 ```
@@ -26,9 +27,11 @@ docker run -it -p 7880:7860 langflowai/langflow:latest
 - The optional --rm flag ensures the container is removed after it stops.
 
 Step 3: Access Langflow
+type 
 ```bash
-type http://localhost:7880 in browser
+ http://localhost:7880 
 ```
+in browser
 
 
 ### Installation langflow 1.2.0 with uv
