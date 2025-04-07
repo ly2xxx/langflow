@@ -18,8 +18,7 @@ Step 2: Run Langflow Docker Image
 ```bash
 docker run -it --rm -p 7880:7860 langflowai/langflow:latest
 ```
-    or if you want to keep the container
-    
+
 ```bash
 docker run -it -p 7880:7860 langflowai/langflow:latest
 ```
