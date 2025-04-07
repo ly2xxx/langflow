@@ -5,7 +5,41 @@ langflow
 - Python 3.10 or higher
 - Git
 
-### Installation langflow 1.1.1
+### Installation langflow on docker desktop
+Prerequisites 
+- docker-desktop
+
+Step 1 : Pull the Langflow Docker Image
+```bash
+docker pull langflowai/langflow
+```
+
+Step 2: Run Langflow Docker Image
+```bash
+docker run -it --rm -p 7860:7860 langflowai/langflow:latest
+```
+or if you want to keep the container
+```bash
+docker run -it -p 7880:7860 langflowai/langflow:latest
+```
+The -p 7860/7880:7860 flag maps port 7860 of the container to port 7860/7880 on your host machine.
+The optional --rm flag ensures the container is removed after it stops.
+
+### Installation langflow 1.2.0 with uv
+Create a virtual environment :
+```bash
+conda create --name langflow120  python=3.12
+conda activate langflow120
+```
+
+Install the required dependencies in the virtual environment :
+```bash
+pip install uv==0.5.26
+uv pip install langflow==1.2.0
+```
+
+
+### Installation langflow 1.1.1 with pip
 Clone the repository :
 ```bash
 git clone https://github.com/ly2xxx/langflow.git
@@ -35,20 +69,6 @@ If you encounter timeout, try to increase timeout threshold
 ```bash
 pip install langflow==1.1.1 --default-timeout=1000 --use-deprecated=legacy-resolver --no-build-isolation
 ```
-
-### Installation langflow 1.2.0 with uv
-Create a virtual environment :
-```bash
-conda create --name langflow120  python=3.12
-conda activate langflow120
-```
-
-Install the required dependencies in the virtual environment :
-```bash
-pip install uv==0.5.26
-uv pip install langflow==1.2.0
-```
-
 
 ### Run the app :
 ```bash
