@@ -16,14 +16,20 @@ docker pull langflowai/langflow
 
 Step 2: Run Langflow Docker Image
 ```bash
-docker run -it --rm -p 7860:7860 langflowai/langflow:latest
+docker run -it --rm -p 7880:7860 langflowai/langflow:latest
 ```
-or if you want to keep the container
+    or if you want to keep the container
 ```bash
 docker run -it -p 7880:7860 langflowai/langflow:latest
 ```
-The -p 7860/7880:7860 flag maps port 7860 of the container to port 7860/7880 on your host machine.
-The optional --rm flag ensures the container is removed after it stops.
+- The -p 7880:7860 flag maps port 7860 of the container to port 7880 on your host machine.
+- The optional --rm flag ensures the container is removed after it stops.
+
+Step 3: Access Langflow
+```bash
+type http://localhost:7880 in browser
+```
+
 
 ### Installation langflow 1.2.0 with uv
 Create a virtual environment :
