@@ -1,0 +1,583 @@
+{
+  "data": {
+    "edges": [
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {
+            "dataType": "MCPTools",
+            "id": "MCPTools-Qa5UL",
+            "name": "response",
+            "output_types": [
+              "Message"
+            ]
+          },
+          "targetHandle": {
+            "fieldName": "input_value",
+            "id": "ChatOutput-Z1JvP",
+            "inputTypes": [
+              "Data",
+              "DataFrame",
+              "Message"
+            ],
+            "type": "other"
+          }
+        },
+        "id": "xy-edge__MCPTools-Qa5UL{œdataTypeœ:œMCPToolsœ,œidœ:œMCPTools-Qa5ULœ,œnameœ:œresponseœ,œoutput_typesœ:[œMessageœ]}-ChatOutput-Z1JvP{œfieldNameœ:œinput_valueœ,œidœ:œChatOutput-Z1JvPœ,œinputTypesœ:[œDataœ,œDataFrameœ,œMessageœ],œtypeœ:œotherœ}",
+        "selected": false,
+        "source": "MCPTools-Qa5UL",
+        "sourceHandle": "{œdataTypeœ:œMCPToolsœ,œidœ:œMCPTools-Qa5ULœ,œnameœ:œresponseœ,œoutput_typesœ:[œMessageœ]}",
+        "target": "ChatOutput-Z1JvP",
+        "targetHandle": "{œfieldNameœ:œinput_valueœ,œidœ:œChatOutput-Z1JvPœ,œinputTypesœ:[œDataœ,œDataFrameœ,œMessageœ],œtypeœ:œotherœ}"
+      }
+    ],
+    "nodes": [
+      {
+        "data": {
+          "id": "MCPTools-Qa5UL",
+          "node": {
+            "base_classes": [
+              "Message"
+            ],
+            "beta": false,
+            "category": "tools",
+            "conditional_paths": [],
+            "custom_fields": {},
+            "description": "Connect to an MCP server and expose tools.",
+            "display_name": "MCP Server",
+            "documentation": "",
+            "edited": false,
+            "field_order": [
+              "mode",
+              "command",
+              "sse_url",
+              "tool",
+              "tool_placeholder"
+            ],
+            "frozen": false,
+            "icon": "server",
+            "key": "MCPTools",
+            "legacy": false,
+            "lf_version": "1.3.2",
+            "metadata": {},
+            "minimized": false,
+            "output_types": [],
+            "outputs": [
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Response",
+                "hidden": null,
+                "method": "build_output",
+                "name": "response",
+                "options": null,
+                "required_inputs": null,
+                "selected": "Message",
+                "tool_mode": true,
+                "types": [
+                  "Message"
+                ],
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "pinned": false,
+            "score": 0.0037733694121527017,
+            "template": {
+              "_type": "Component",
+              "code": {
+                "advanced": true,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "import os\nfrom typing import Any\n\nimport httpx\nfrom langchain_core.tools import StructuredTool\n\nfrom langflow.base.mcp.util import (\n    HTTP_ERROR_STATUS_CODE,\n    MCPSseClient,\n    MCPStdioClient,\n    create_input_schema_from_json_schema,\n    create_tool_coroutine,\n    create_tool_func,\n)\nfrom langflow.custom import Component\nfrom langflow.inputs import DropdownInput\nfrom langflow.inputs.inputs import InputTypes\nfrom langflow.io import MessageTextInput, Output, TabInput\nfrom langflow.io.schema import schema_to_langflow_inputs\nfrom langflow.logging import logger\nfrom langflow.schema import Message\n\n\nclass MCPToolsComponent(Component):\n    schema_inputs: list[InputTypes] = []\n    stdio_client: MCPStdioClient = MCPStdioClient()\n    sse_client: MCPSseClient = MCPSseClient()\n    tools: list = []\n    tool_names: list[str] = []\n    _tool_cache: dict = {}  # Cache for tool objects\n    default_keys: list[str] = [\"code\", \"_type\", \"mode\", \"command\", \"sse_url\", \"tool_placeholder\", \"tool_mode\", \"tool\"]\n\n    display_name = \"MCP Server\"\n    description = \"Connect to an MCP server and expose tools.\"\n    icon = \"server\"\n    name = \"MCPTools\"\n\n    inputs = [\n        TabInput(\n            name=\"mode\",\n            display_name=\"Mode\",\n            options=[\"Stdio\", \"SSE\"],\n            value=\"Stdio\",\n            info=\"Select the connection mode\",\n            real_time_refresh=True,\n        ),\n        MessageTextInput(\n            name=\"command\",\n            display_name=\"MCP Command\",\n            info=\"Command for MCP stdio connection\",\n            value=\"uvx mcp-server-fetch\",\n            show=True,\n            refresh_button=True,\n        ),\n        MessageTextInput(\n            name=\"sse_url\",\n            display_name=\"MCP SSE URL\",\n            info=\"URL for MCP SSE connection\",\n            show=False,\n            refresh_button=True,\n        ),\n        DropdownInput(\n            name=\"tool\",\n            display_name=\"Tool\",\n            options=[],\n            value=\"\",\n            info=\"Select the tool to execute\",\n            show=True,\n            required=True,\n            real_time_refresh=True,\n        ),\n        MessageTextInput(\n            name=\"tool_placeholder\",\n            display_name=\"Tool Placeholder\",\n            info=\"Placeholder for the tool\",\n            value=\"\",\n            show=False,\n            tool_mode=True,\n        ),\n    ]\n\n    outputs = [\n        Output(display_name=\"Response\", name=\"response\", method=\"build_output\"),\n    ]\n\n    async def find_langflow_instance(self) -> tuple[bool, int | None, str]:\n        \"\"\"Find Langflow instance by checking env variable first, then scanning common ports.\"\"\"\n        # First check environment variable\n        env_port = os.getenv(\"LANGFLOW_PORT\")\n        port = int(env_port) if env_port else 7860\n        try:\n            url = f\"http://localhost:{port}/api/v1/mcp/sse\"\n            async with httpx.AsyncClient() as client:\n                response = await client.head(url, timeout=2.0)\n                if response.status_code < HTTP_ERROR_STATUS_CODE:\n                    return True, port, f\"Langflow instance found at configured port {port}\"\n        except (ValueError, httpx.TimeoutException, httpx.NetworkError, httpx.HTTPError):\n            logger.warning(f\"Could not connect to Langflow at configured port {env_port}\")\n        return False, None, \"No Langflow instance found on configured port or common ports\"\n\n    async def _validate_connection_params(self, mode: str, command: str | None = None, url: str | None = None) -> None:\n        \"\"\"Validate connection parameters based on mode.\"\"\"\n        if mode not in [\"Stdio\", \"SSE\"]:\n            msg = f\"Invalid mode: {mode}. Must be either 'Stdio' or 'SSE'\"\n            raise ValueError(msg)\n\n        if mode == \"Stdio\" and not command:\n            msg = \"Command is required for Stdio mode\"\n            raise ValueError(msg)\n        if mode == \"SSE\" and not url:\n            msg = \"URL is required for SSE mode\"\n            raise ValueError(msg)\n\n    async def _validate_schema_inputs(self, tool_obj) -> list[InputTypes]:\n        \"\"\"Validate and process schema inputs for a tool.\"\"\"\n        try:\n            if not tool_obj or not hasattr(tool_obj, \"inputSchema\"):\n                msg = \"Invalid tool object or missing input schema\"\n                raise ValueError(msg)\n\n            input_schema = create_input_schema_from_json_schema(tool_obj.inputSchema)\n            if not input_schema:\n                msg = f\"Empty input schema for tool '{tool_obj.name}'\"\n                raise ValueError(msg)\n\n            schema_inputs = schema_to_langflow_inputs(input_schema)\n            if not schema_inputs:\n                msg = f\"No input parameters defined for tool '{tool_obj.name}'\"\n                logger.warning(msg)\n                return []\n\n        except Exception as e:\n            msg = f\"Error validating schema inputs: {e!s}\"\n            logger.exception(msg)\n            raise ValueError(msg) from e\n        else:\n            return schema_inputs\n\n    async def update_build_config(self, build_config: dict, field_value: str, field_name: str | None = None) -> dict:\n        \"\"\"Toggle the visibility of connection-specific fields based on the selected mode.\"\"\"\n        try:\n            if field_name == \"mode\":\n                self.remove_non_default_keys(build_config)\n                if field_value == \"Stdio\":\n                    build_config[\"command\"][\"show\"] = True\n                    build_config[\"sse_url\"][\"show\"] = False\n                elif field_value == \"SSE\":\n                    build_config[\"command\"][\"show\"] = False\n                    build_config[\"sse_url\"][\"show\"] = True\n                    _, port, _ = await self.find_langflow_instance()\n                    if port:\n                        build_config[\"sse_url\"][\"value\"] = f\"http://localhost:{port}/api/v1/mcp/sse\"\n                        self.sse_url = build_config[\"sse_url\"][\"value\"]\n                    return build_config\n            if field_name in (\"command\", \"sse_url\", \"mode\"):\n                try:\n                    # If SSE mode and localhost URL is not valid, try to find correct port\n                    if field_name == \"sse_url\":\n                        self.sse_url = field_value\n                    elif self.mode == \"SSE\" and (\"localhost\" in str(self.sse_url) or \"127.0.0.1\" in str(self.sse_url)):\n                        is_valid, _ = await self.sse_client.validate_url(self.sse_url)\n                        if not is_valid:\n                            found, port, message = await self.find_langflow_instance()\n                            if found:\n                                new_url = f\"http://localhost:{port}/api/v1/mcp/sse\"\n                                logger.info(f\"Original URL {self.sse_url} not valid. {message}\")\n                                build_config[\"sse_url\"][\"value\"] = new_url\n                                self.sse_url = new_url\n\n                    await self.update_tools()\n                    if \"tool\" in build_config:\n                        build_config[\"tool\"][\"options\"] = self.tool_names\n                except Exception as e:\n                    build_config[\"tool\"][\"options\"] = []\n                    msg = f\"Failed to update tools: {e!s}\"\n                    raise ValueError(msg) from e\n            elif field_name == \"tool\":\n                if len(self.tools) == 0:\n                    await self.update_tools()\n                if self.tool is None:\n                    return build_config\n                tool_obj = None\n                for tool in self.tools:\n                    if tool.name == self.tool:\n                        tool_obj = tool\n                        break\n                if tool_obj is None:\n                    msg = f\"Tool {self.tool} not found in available tools: {self.tools}\"\n                    logger.warning(msg)\n                    return build_config\n                self.remove_non_default_keys(build_config)\n                await self._update_tool_config(build_config, field_value)\n            elif field_name == \"tool_mode\":\n                build_config[\"tool\"][\"show\"] = not field_value\n                for key, value in list(build_config.items()):\n                    if key not in self.default_keys and isinstance(value, dict) and \"show\" in value:\n                        build_config[key][\"show\"] = not field_value\n\n        except Exception as e:\n            msg = f\"Error in update_build_config: {e!s}\"\n            logger.exception(msg)\n            raise ValueError(msg) from e\n        else:\n            return build_config\n\n    def get_inputs_for_all_tools(self, tools: list) -> dict:\n        \"\"\"Get input schemas for all tools.\"\"\"\n        inputs = {}\n        for tool in tools:\n            if not tool or not hasattr(tool, \"name\"):\n                continue\n            try:\n                input_schema = schema_to_langflow_inputs(create_input_schema_from_json_schema(tool.inputSchema))\n                inputs[tool.name] = input_schema\n            except (AttributeError, ValueError, TypeError, KeyError) as e:\n                msg = f\"Error getting inputs for tool {getattr(tool, 'name', 'unknown')}: {e!s}\"\n                logger.exception(msg)\n                continue\n        return inputs\n\n    def remove_input_schema_from_build_config(\n        self, build_config: dict, tool_name: str, input_schema: dict[list[InputTypes], Any]\n    ):\n        \"\"\"Remove the input schema for the tool from the build config.\"\"\"\n        # Keep only schemas that don't belong to the current tool\n        input_schema = {k: v for k, v in input_schema.items() if k != tool_name}\n        # Remove all inputs from other tools\n        for value in input_schema.values():\n            for _input in value:\n                if _input.name in build_config:\n                    build_config.pop(_input.name)\n\n    def remove_non_default_keys(self, build_config: dict) -> None:\n        \"\"\"Remove non-default keys from the build config.\"\"\"\n        for key in list(build_config.keys()):\n            if key not in self.default_keys:\n                build_config.pop(key)\n\n    async def _update_tool_config(self, build_config: dict, tool_name: str) -> None:\n        \"\"\"Update tool configuration with proper error handling.\"\"\"\n        if not self.tools:\n            await self.update_tools()\n\n        if not tool_name:\n            return\n\n        tool_obj = next((tool for tool in self.tools if tool.name == tool_name), None)\n        if not tool_obj:\n            msg = f\"Tool {tool_name} not found in available tools: {self.tools}\"\n            logger.warning(msg)\n            return\n\n        try:\n            # Get all tool inputs and remove old ones\n            input_schema_for_all_tools = self.get_inputs_for_all_tools(self.tools)\n            self.remove_input_schema_from_build_config(build_config, tool_name, input_schema_for_all_tools)\n\n            # Get and validate new inputs\n            self.schema_inputs = await self._validate_schema_inputs(tool_obj)\n            if not self.schema_inputs:\n                msg = f\"No input parameters to configure for tool '{tool_name}'\"\n                logger.info(msg)\n                return\n\n            # Add new inputs to build config\n            for schema_input in self.schema_inputs:\n                if not schema_input or not hasattr(schema_input, \"name\"):\n                    msg = \"Invalid schema input detected, skipping\"\n                    logger.warning(msg)\n                    continue\n\n                try:\n                    name = schema_input.name\n                    input_dict = schema_input.to_dict()\n                    input_dict.setdefault(\"value\", None)\n                    input_dict.setdefault(\"required\", True)\n                    build_config[name] = input_dict\n                except (AttributeError, KeyError, TypeError) as e:\n                    msg = f\"Error processing schema input {schema_input}: {e!s}\"\n                    logger.exception(msg)\n                    continue\n\n        except ValueError as e:\n            msg = f\"Schema validation error for tool {tool_name}: {e!s}\"\n            logger.exception(msg)\n            self.schema_inputs = []\n            return\n        except (AttributeError, KeyError, TypeError) as e:\n            msg = f\"Error updating tool config: {e!s}\"\n            logger.exception(msg)\n            raise ValueError(msg) from e\n\n    async def build_output(self) -> Message:\n        \"\"\"Build output with improved error handling and validation.\"\"\"\n        try:\n            await self.update_tools()\n            if self.tool != \"\":\n                exec_tool = self._tool_cache[self.tool]\n                tool_args = self.get_inputs_for_all_tools(self.tools)[self.tool]\n                kwargs = {}\n                for arg in tool_args:\n                    value = getattr(self, arg.name, None)\n                    if value:\n                        kwargs[arg.name] = value\n                output = await exec_tool.coroutine(**kwargs)\n                return Message(text=output.content[len(output.content) - 1].text)\n            return Message(text=\"You must select a tool\", error=True)\n        except Exception as e:\n            msg = f\"Error in build_output: {e!s}\"\n            logger.exception(msg)\n            raise ValueError(msg) from e\n\n    async def update_tools(self) -> list[StructuredTool]:\n        \"\"\"Connect to the MCP server and update available tools with improved error handling.\"\"\"\n        try:\n            await self._validate_connection_params(self.mode, self.command, self.sse_url)\n\n            if self.mode == \"Stdio\":\n                if not self.stdio_client.session:\n                    self.tools = await self.stdio_client.connect_to_server(self.command)\n            elif self.mode == \"SSE\" and not self.sse_client.session:\n                try:\n                    is_valid, _ = await self.sse_client.validate_url(self.sse_url)\n                    if not is_valid:\n                        msg = f\"Invalid SSE URL configuration: {self.sse_url}. Please check the SSE URL and try again.\"\n                        logger.error(msg)\n                        return []\n                    self.tools = await self.sse_client.connect_to_server(self.sse_url, {})\n                except ValueError as e:\n                    # URL validation error\n                    logger.error(f\"SSE URL validation error: {e}\")\n                    msg = f\"Invalid SSE URL configuration: {e}. Please check your Langflow deployment URL and port.\"\n                    raise ValueError(msg) from e\n                except ConnectionError as e:\n                    # Connection failed after retries\n                    logger.error(f\"SSE connection error: {e}\")\n                    msg = (\n                        f\"Could not connect to Langflow SSE endpoint: {e}. \"\n                        \"Please verify:\\n\"\n                        \"1. Langflow server is running\\n\"\n                        \"2. The SSE URL matches your Langflow deployment port\\n\"\n                        \"3. There are no network issues preventing the connection\"\n                    )\n                    raise ValueError(msg) from e\n                except Exception as e:\n                    logger.error(f\"Unexpected SSE error: {e}\")\n                    msg = f\"Unexpected error connecting to SSE endpoint: {e}\"\n                    raise ValueError(msg) from e\n\n            if not self.tools:\n                logger.warning(\"No tools returned from server\")\n                return []\n\n            tool_list = []\n            for tool in self.tools:\n                if not tool or not hasattr(tool, \"name\"):\n                    logger.warning(\"Invalid tool object detected, skipping\")\n                    continue\n\n                try:\n                    args_schema = create_input_schema_from_json_schema(tool.inputSchema)\n                    if not args_schema:\n                        logger.warning(f\"Empty schema for tool '{tool.name}', skipping\")\n                        continue\n\n                    client = self.stdio_client if self.mode == \"Stdio\" else self.sse_client\n                    if not client or not client.session:\n                        msg = f\"Invalid client session for tool '{tool.name}'\"\n                        raise ValueError(msg)\n\n                    tool_obj = StructuredTool(\n                        name=tool.name,\n                        description=tool.description or \"\",\n                        args_schema=args_schema,\n                        func=create_tool_func(tool.name, args_schema, client.session),\n                        coroutine=create_tool_coroutine(tool.name, args_schema, client.session),\n                        tags=[tool.name],\n                    )\n                    tool_list.append(tool_obj)\n                    self._tool_cache[tool.name] = tool_obj\n                except (AttributeError, ValueError, TypeError, KeyError) as e:\n                    msg = f\"Error creating tool {getattr(tool, 'name', 'unknown')}: {e}\"\n                    logger.exception(msg)\n                    continue\n\n            self.tool_names = [tool.name for tool in self.tools if hasattr(tool, \"name\")]\n\n        except ValueError as e:\n            # Re-raise validation errors with clear messages\n            raise ValueError(str(e)) from e\n        except Exception as e:\n            logger.exception(\"Error updating tools\")\n            msg = f\"Failed to update tools: {e!s}\"\n            raise ValueError(msg) from e\n        else:\n            return tool_list\n\n    async def _get_tools(self):\n        \"\"\"Get cached tools or update if necessary.\"\"\"\n        if not self.tools:\n            return await self.update_tools()\n        return self.tools\n"
+              },
+              "command": {
+                "_input_type": "MessageTextInput",
+                "advanced": false,
+                "display_name": "MCP Command",
+                "dynamic": false,
+                "info": "Command for MCP stdio connection",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "command",
+                "placeholder": "",
+                "refresh_button": true,
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": "uvx mcp-server-time"
+              },
+              "mode": {
+                "_input_type": "TabInput",
+                "advanced": false,
+                "display_name": "Mode",
+                "dynamic": false,
+                "info": "Select the connection mode",
+                "name": "mode",
+                "options": [
+                  "Stdio",
+                  "SSE"
+                ],
+                "placeholder": "",
+                "real_time_refresh": true,
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "type": "tab",
+                "value": "Stdio"
+              },
+              "sse_url": {
+                "_input_type": "MessageTextInput",
+                "advanced": false,
+                "display_name": "MCP SSE URL",
+                "dynamic": false,
+                "info": "URL for MCP SSE connection",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "sse_url",
+                "placeholder": "",
+                "refresh_button": true,
+                "required": false,
+                "show": false,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": ""
+              },
+              "timezone": {
+                "_input_type": "MessageTextInput",
+                "advanced": false,
+                "display_name": "Timezone",
+                "dynamic": false,
+                "info": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'UTC' as local timezone if no timezone provided by the user.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "timezone",
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": "Etc/GMT0"
+              },
+              "tool": {
+                "_input_type": "DropdownInput",
+                "advanced": false,
+                "combobox": false,
+                "dialog_inputs": {},
+                "display_name": "Tool",
+                "dynamic": false,
+                "info": "Select the tool to execute",
+                "name": "tool",
+                "options": [
+                  "get_current_time",
+                  "convert_time"
+                ],
+                "options_metadata": [],
+                "placeholder": "",
+                "real_time_refresh": true,
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": "get_current_time"
+              },
+              "tool_placeholder": {
+                "_input_type": "MessageTextInput",
+                "advanced": false,
+                "display_name": "Tool Placeholder",
+                "dynamic": false,
+                "info": "Placeholder for the tool",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "tool_placeholder",
+                "placeholder": "",
+                "required": false,
+                "show": false,
+                "title_case": false,
+                "tool_mode": true,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": ""
+              }
+            },
+            "tool_mode": false
+          },
+          "showNode": true,
+          "type": "MCPTools"
+        },
+        "dragging": false,
+        "id": "MCPTools-Qa5UL",
+        "measured": {
+          "height": 473,
+          "width": 320
+        },
+        "position": {
+          "x": 557,
+          "y": 305
+        },
+        "selected": true,
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "ChatOutput-Z1JvP",
+          "node": {
+            "base_classes": [
+              "Message"
+            ],
+            "beta": false,
+            "conditional_paths": [],
+            "custom_fields": {},
+            "description": "Display a chat message in the Playground.",
+            "display_name": "Chat Output",
+            "documentation": "",
+            "edited": false,
+            "field_order": [
+              "input_value",
+              "should_store_message",
+              "sender",
+              "sender_name",
+              "session_id",
+              "data_template",
+              "background_color",
+              "chat_icon",
+              "text_color",
+              "clean_data"
+            ],
+            "frozen": false,
+            "icon": "MessagesSquare",
+            "legacy": false,
+            "metadata": {},
+            "minimized": true,
+            "output_types": [],
+            "outputs": [
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Message",
+                "method": "message_response",
+                "name": "message",
+                "selected": "Message",
+                "tool_mode": true,
+                "types": [
+                  "Message"
+                ],
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "pinned": false,
+            "template": {
+              "_type": "Component",
+              "background_color": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Background Color",
+                "dynamic": false,
+                "info": "The background color of the icon.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "background_color",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": ""
+              },
+              "chat_icon": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Icon",
+                "dynamic": false,
+                "info": "The icon of the message.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "chat_icon",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": ""
+              },
+              "clean_data": {
+                "_input_type": "BoolInput",
+                "advanced": true,
+                "display_name": "Basic Clean Data",
+                "dynamic": false,
+                "info": "Whether to clean the data",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "clean_data",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "type": "bool",
+                "value": true
+              },
+              "code": {
+                "advanced": true,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "from collections.abc import Generator\nfrom typing import Any\n\nfrom langflow.base.io.chat import ChatComponent\nfrom langflow.inputs import BoolInput\nfrom langflow.inputs.inputs import HandleInput\nfrom langflow.io import DropdownInput, MessageTextInput, Output\nfrom langflow.schema.data import Data\nfrom langflow.schema.dataframe import DataFrame\nfrom langflow.schema.message import Message\nfrom langflow.schema.properties import Source\nfrom langflow.utils.constants import (\n    MESSAGE_SENDER_AI,\n    MESSAGE_SENDER_NAME_AI,\n    MESSAGE_SENDER_USER,\n)\n\n\nclass ChatOutput(ChatComponent):\n    display_name = \"Chat Output\"\n    description = \"Display a chat message in the Playground.\"\n    icon = \"MessagesSquare\"\n    name = \"ChatOutput\"\n    minimized = True\n\n    inputs = [\n        HandleInput(\n            name=\"input_value\",\n            display_name=\"Text\",\n            info=\"Message to be passed as output.\",\n            input_types=[\"Data\", \"DataFrame\", \"Message\"],\n            required=True,\n        ),\n        BoolInput(\n            name=\"should_store_message\",\n            display_name=\"Store Messages\",\n            info=\"Store the message in the history.\",\n            value=True,\n            advanced=True,\n        ),\n        DropdownInput(\n            name=\"sender\",\n            display_name=\"Sender Type\",\n            options=[MESSAGE_SENDER_AI, MESSAGE_SENDER_USER],\n            value=MESSAGE_SENDER_AI,\n            advanced=True,\n            info=\"Type of sender.\",\n        ),\n        MessageTextInput(\n            name=\"sender_name\",\n            display_name=\"Sender Name\",\n            info=\"Name of the sender.\",\n            value=MESSAGE_SENDER_NAME_AI,\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"session_id\",\n            display_name=\"Session ID\",\n            info=\"The session ID of the chat. If empty, the current session ID parameter will be used.\",\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"data_template\",\n            display_name=\"Data Template\",\n            value=\"{text}\",\n            advanced=True,\n            info=\"Template to convert Data to Text. If left empty, it will be dynamically set to the Data's text key.\",\n        ),\n        MessageTextInput(\n            name=\"background_color\",\n            display_name=\"Background Color\",\n            info=\"The background color of the icon.\",\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"chat_icon\",\n            display_name=\"Icon\",\n            info=\"The icon of the message.\",\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"text_color\",\n            display_name=\"Text Color\",\n            info=\"The text color of the name\",\n            advanced=True,\n        ),\n        BoolInput(\n            name=\"clean_data\",\n            display_name=\"Basic Clean Data\",\n            value=True,\n            info=\"Whether to clean the data\",\n            advanced=True,\n        ),\n    ]\n    outputs = [\n        Output(\n            display_name=\"Message\",\n            name=\"message\",\n            method=\"message_response\",\n        ),\n    ]\n\n    def _build_source(self, id_: str | None, display_name: str | None, source: str | None) -> Source:\n        source_dict = {}\n        if id_:\n            source_dict[\"id\"] = id_\n        if display_name:\n            source_dict[\"display_name\"] = display_name\n        if source:\n            # Handle case where source is a ChatOpenAI object\n            if hasattr(source, \"model_name\"):\n                source_dict[\"source\"] = source.model_name\n            elif hasattr(source, \"model\"):\n                source_dict[\"source\"] = str(source.model)\n            else:\n                source_dict[\"source\"] = str(source)\n        return Source(**source_dict)\n\n    async def message_response(self) -> Message:\n        # First convert the input to string if needed\n        text = self.convert_to_string()\n        # Get source properties\n        source, icon, display_name, source_id = self.get_properties_from_source_component()\n        background_color = self.background_color\n        text_color = self.text_color\n        if self.chat_icon:\n            icon = self.chat_icon\n\n        # Create or use existing Message object\n        if isinstance(self.input_value, Message):\n            message = self.input_value\n            # Update message properties\n            message.text = text\n        else:\n            message = Message(text=text)\n\n        # Set message properties\n        message.sender = self.sender\n        message.sender_name = self.sender_name\n        message.session_id = self.session_id\n        message.flow_id = self.graph.flow_id if hasattr(self, \"graph\") else None\n        message.properties.source = self._build_source(source_id, display_name, source)\n        message.properties.icon = icon\n        message.properties.background_color = background_color\n        message.properties.text_color = text_color\n\n        # Store message if needed\n        if self.session_id and self.should_store_message:\n            stored_message = await self.send_message(message)\n            self.message.value = stored_message\n            message = stored_message\n\n        self.status = message\n        return message\n\n    def _validate_input(self) -> None:\n        \"\"\"Validate the input data and raise ValueError if invalid.\"\"\"\n        if self.input_value is None:\n            msg = \"Input data cannot be None\"\n            raise ValueError(msg)\n        if isinstance(self.input_value, list) and not all(\n            isinstance(item, Message | Data | DataFrame | str) for item in self.input_value\n        ):\n            invalid_types = [\n                type(item).__name__\n                for item in self.input_value\n                if not isinstance(item, Message | Data | DataFrame | str)\n            ]\n            msg = f\"Expected Data or DataFrame or Message or str, got {invalid_types}\"\n            raise TypeError(msg)\n        if not isinstance(\n            self.input_value,\n            Message | Data | DataFrame | str | list | Generator | type(None),\n        ):\n            type_name = type(self.input_value).__name__\n            msg = f\"Expected Data or DataFrame or Message or str, Generator or None, got {type_name}\"\n            raise TypeError(msg)\n\n    def _safe_convert(self, data: Any) -> str:\n        \"\"\"Safely convert input data to string.\"\"\"\n        try:\n            if isinstance(data, str):\n                return data\n            if isinstance(data, Message):\n                return data.get_text()\n            if isinstance(data, Data):\n                if data.get_text() is None:\n                    msg = \"Empty Data object\"\n                    raise ValueError(msg)\n                return data.get_text()\n            if isinstance(data, DataFrame):\n                if self.clean_data:\n                    # Remove empty rows\n                    data = data.dropna(how=\"all\")\n                    # Remove empty lines in each cell\n                    data = data.replace(r\"^\\s*$\", \"\", regex=True)\n                    # Replace multiple newlines with a single newline\n                    data = data.replace(r\"\\n+\", \"\\n\", regex=True)\n\n                # Replace pipe characters to avoid markdown table issues\n                processed_data = data.replace(r\"\\|\", r\"\\\\|\", regex=True)\n\n                processed_data = processed_data.map(\n                    lambda x: str(x).replace(\"\\n\", \"<br/>\") if isinstance(x, str) else x\n                )\n\n                return processed_data.to_markdown(index=False)\n            return str(data)\n        except (ValueError, TypeError, AttributeError) as e:\n            msg = f\"Error converting data: {e!s}\"\n            raise ValueError(msg) from e\n\n    def convert_to_string(self) -> str | Generator[Any, None, None]:\n        \"\"\"Convert input data to string with proper error handling.\"\"\"\n        self._validate_input()\n        if isinstance(self.input_value, list):\n            return \"\\n\".join([self._safe_convert(item) for item in self.input_value])\n        if isinstance(self.input_value, Generator):\n            return self.input_value\n        return self._safe_convert(self.input_value)\n"
+              },
+              "data_template": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Data Template",
+                "dynamic": false,
+                "info": "Template to convert Data to Text. If left empty, it will be dynamically set to the Data's text key.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "data_template",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": "{text}"
+              },
+              "input_value": {
+                "_input_type": "HandleInput",
+                "advanced": false,
+                "display_name": "Text",
+                "dynamic": false,
+                "info": "Message to be passed as output.",
+                "input_types": [
+                  "Data",
+                  "DataFrame",
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "input_value",
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "trace_as_metadata": true,
+                "type": "other",
+                "value": ""
+              },
+              "sender": {
+                "_input_type": "DropdownInput",
+                "advanced": true,
+                "combobox": false,
+                "dialog_inputs": {},
+                "display_name": "Sender Type",
+                "dynamic": false,
+                "info": "Type of sender.",
+                "name": "sender",
+                "options": [
+                  "Machine",
+                  "User"
+                ],
+                "options_metadata": [],
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Sender Name",
+                "dynamic": false,
+                "info": "Name of the sender.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "sender_name",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": "AI"
+              },
+              "session_id": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Session ID",
+                "dynamic": false,
+                "info": "The session ID of the chat. If empty, the current session ID parameter will be used.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "session_id",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": ""
+              },
+              "should_store_message": {
+                "_input_type": "BoolInput",
+                "advanced": true,
+                "display_name": "Store Messages",
+                "dynamic": false,
+                "info": "Store the message in the history.",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "should_store_message",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "type": "bool",
+                "value": true
+              },
+              "text_color": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Text Color",
+                "dynamic": false,
+                "info": "The text color of the name",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "text_color",
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "type": "str",
+                "value": ""
+              }
+            },
+            "tool_mode": false
+          },
+          "showNode": false,
+          "type": "ChatOutput"
+        },
+        "id": "ChatOutput-Z1JvP",
+        "measured": {
+          "height": 66,
+          "width": 192
+        },
+        "position": {
+          "x": 974,
+          "y": 707
+        },
+        "selected": false,
+        "type": "genericNode"
+      }
+    ],
+    "viewport": {
+      "x": 0,
+      "y": 1,
+      "zoom": 1
+    }
+  },
+  "description": "Fetch the time given timezone. Eg. America/New_York, Europe/Warsaw, Asia/Tokyo\nhttps://en.wikipedia.org/wiki/List_of_tz_database_time_zones",
+  "endpoint_name": "world-clock",
+  "id": "b7a5f4d2-0996-41e0-922f-971e22ba2d25",
+  "is_component": false,
+  "last_tested_version": "1.3.2",
+  "name": "MCP World Clock",
+  "tags": []
+}
