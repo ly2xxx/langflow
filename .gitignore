@@ -163,4 +163,5 @@ cython_debug/
 *.faiss
 *.txt
 !SampleFlows/RAG/*.txt
+!SampleFlows/langflow130/demo/*.txt
 
