@@ -110,6 +110,8 @@ https://github.com/techwithtim/Langflow-Customer-Support-Agent
 
 [![ Langflow as an MCP server](https://img.youtube.com/vi/vi40dn79Zgw/hqdefault.jpg)](https://m.youtube.com/watch?v=vi40dn79Zgw)
 
+# Components demo
+[![Webhooks, Parser, Structured Output](https://img.youtube.com/vi/IC1CAtzFRE0/hqdefault.jpg)](https://m.youtube.com/watch?v=IC1CAtzFRE0)
 
 
 JAVA client chatbot - https://github.com/aar0np/workshop_ecommerce_prototype/blob/main/README.md
