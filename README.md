@@ -1,5 +1,6 @@
 # langflow
 langflow
+https://www.langflow.org/use-cases
 
 ### Prerequisites
 - Python 3.10 or higher
