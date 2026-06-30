@@ -21,7 +21,8 @@ docker run -it --rm -p 7880:7860 langflowai/langflow:latest
 ```
 
 ```bash
-docker run -it -p 7880:7860 langflowai/langflow:latest
+(might require setting OLLAMA_HOST=0.0.0.0)
+docker run -it -p 7880:7860 -e LANGFLOW_SSRF_ALLOWED_HOSTS=host.docker.internal langflowai/langflow:latest
 ```
 - The -p 7880:7860 flag maps port 7860 of the container to port 7880 on your host machine.
 - The optional --rm flag ensures the container is removed after it stops.
